@@ -3,8 +3,6 @@ import app from "./app.js";
 
 const { PORT = 5555, DB_HOST } = process.env;
 
-// 7x3kPTK3WgBRCH3O
-
 mongoose
   .connect(DB_HOST)
   .then(() => {
