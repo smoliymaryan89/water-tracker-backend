@@ -97,8 +97,8 @@ const getTodayWater = async (req, res) => {
   ``;
   // Розрахунок відсотка використання води від денної норми користувача
   const user = await User.findById(owner);
-  // const { waterRate } = user;
-  const waterRate = 5000;
+  const { waterRate } = user;
+  // const waterRate = 5000;
   const totalWaterConsumed = waterRecords.reduce(
     (total, record) => total + record.count,
     0
