@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 import { handleSaveError, runValidators } from "./hooks.js";
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const sexList = ["girl", "man"];
+const genderList = ["male", "female"];
 
 const userSchema = new Schema(
   {
@@ -27,10 +27,10 @@ const userSchema = new Schema(
       minlength: 8,
       maxlength: 64,
     },
-    sex: {
+    gender: {
       type: String,
-      enum: sexList,
-      default: sexList[0],
+      enum: genderList,
+      default: genderList[0],
     },
     avatarURL: {
       type: String,

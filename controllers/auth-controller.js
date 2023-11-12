@@ -117,7 +117,7 @@ const updateUserAvatar = async (req, res) => {
 };
 
 const updateUserInfo = async (req, res) => {
-  const { name, email, sex } = req.body;
+  const { name, email, gender } = req.body;
   const { userId } = req.params;
 
   console.log(userId);
@@ -129,7 +129,7 @@ const updateUserInfo = async (req, res) => {
   }
   if (name) user.name = name;
   if (email) user.email = email;
-  if (sex) user.sex = sex;
+  if (gender) user.gender = gender;
 
   res.json({
     user,
