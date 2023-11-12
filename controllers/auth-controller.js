@@ -120,8 +120,6 @@ const updateUserInfo = async (req, res) => {
   const { name, email, gender } = req.body;
   const { userId } = req.params;
 
-  console.log(userId);
-
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
@@ -136,6 +134,18 @@ const updateUserInfo = async (req, res) => {
   });
 };
 
+const updateWaterRate = async (req, res) => {
+  const { userId } = req.params;
+
+  const result = await User.findOneAndUpdate({ _id: userId }, req.body);
+
+  if (!result) {
+    throw HttpError(404);
+  }
+
+  res.json(result);
+};
+
 export default {
   signup: ctrlWrapper(signup),
   singin: ctrlWrapper(singin),
@@ -144,4 +154,5 @@ export default {
   getCurrent: ctrlWrapper(getCurrent),
   updateUserAvatar: ctrlWrapper(updateUserAvatar),
   updateUserInfo: ctrlWrapper(updateUserInfo),
+  updateWaterRate: ctrlWrapper(updateWaterRate),
 };

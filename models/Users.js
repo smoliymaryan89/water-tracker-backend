@@ -35,6 +35,11 @@ const userSchema = new Schema(
     avatarURL: {
       type: String,
     },
+    waterRate: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     token: {
       type: String,
     },
@@ -63,6 +68,10 @@ export const userSigninSchema = Joi.object({
 
 export const userRefreshTokenSchema = Joi.object({
   refreshToken: Joi.string().required(),
+});
+
+export const userWaterRateSchema = Joi.object({
+  waterRate: Joi.number().integer().min(0).max(15000).required(),
 });
 
 const User = model("user", userSchema);

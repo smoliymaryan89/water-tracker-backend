@@ -16,6 +16,7 @@ const authRouter = express.Router();
 const userSignupValidate = validateBody(userSchemas.userSignupSchema);
 const userSigninValidate = validateBody(userSchemas.userSigninSchema);
 const userRefreshValidate = validateBody(userSchemas.userRefreshTokenSchema);
+const userWaterRateValidate = validateBody(userSchemas.userWaterRateSchema);
 
 authRouter.post(
   "/signup",
@@ -44,6 +45,18 @@ authRouter.patch(
   authController.updateUserAvatar
 );
 
-authRouter.patch("/:userId", isValidId, authController.updateUserInfo);
+authRouter.patch(
+  "/waterRate/:userId",
+  authenticate,
+  isValidId,
+  userWaterRateValidate,
+  authController.updateWaterRate
+);
 
+authRouter.patch(
+  "/:userId",
+  authenticate,
+  isValidId,
+  authController.updateUserInfo
+);
 export default authRouter;
