@@ -16,6 +16,7 @@ const authRouter = express.Router();
 const userSignupValidate = validateBody(userSchemas.userSignupSchema);
 const userSigninValidate = validateBody(userSchemas.userSigninSchema);
 const userRefreshValidate = validateBody(userSchemas.userRefreshTokenSchema);
+const userInfoValidate = validateBody(userSchemas.updateUserInfo);
 
 authRouter.post(
   "/signup",
@@ -44,6 +45,12 @@ authRouter.patch(
   authController.updateUserAvatar
 );
 
-authRouter.patch("/:userId", isValidId, authController.updateUserInfo);
+authRouter.patch(
+  "/:userId",
+  authenticate,
+  isValidId,
+  userInfoValidate,
+  authController.updateUserInfo
+);
 
 export default authRouter;

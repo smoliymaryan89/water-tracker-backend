@@ -120,8 +120,6 @@ const updateUserInfo = async (req, res) => {
   const { name, email, gender } = req.body;
   const { userId } = req.params;
 
-  console.log(userId);
-
   const user = await User.findById(userId).select("-password");
 
   if (!user) {
@@ -130,6 +128,8 @@ const updateUserInfo = async (req, res) => {
   if (name) user.name = name;
   if (email) user.email = email;
   if (gender) user.gender = gender;
+
+  await user.save();
 
   res.json({
     user,
