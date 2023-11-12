@@ -1,7 +1,6 @@
 import Joi from "joi";
 import { Schema, model } from "mongoose";
 import { handleSaveError, runValidators } from "./hooks.js";
-import { json } from "express";
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const genderList = ["male", "female"];
