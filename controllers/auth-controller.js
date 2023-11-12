@@ -138,8 +138,14 @@ const updateUserInfo = async (req, res) => {
 
 const updateWaterRate = async (req, res) => {
   const { userId } = req.params;
+  const { waterRate } = req.body;
 
-  const result = await User.findOneAndUpdate({ _id: userId }, req.body);
+  const waterInMilliliters = waterRate * 1000;
+
+  const result = await User.findOneAndUpdate(
+    { _id: userId },
+    { waterRate: waterInMilliliters }
+  );
 
   if (!result) {
     throw HttpError(404);
