@@ -67,7 +67,7 @@ export const userSigninSchema = Joi.object({
   password: Joi.string().min(6).max(64).required(),
 });
 
-export const updateUserInfo = Joi.object({
+export const updateUserInfoSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string().pattern(emailRegexp),
   gender: Joi.string().valid(...genderList),
