@@ -14,7 +14,7 @@ const waterAddValidate = validateBody(waterAddSchema);
 
 const waterRouter = express.Router();
 
-waterRouter.use(authenticate)
+waterRouter.use(authenticate);
 
 waterRouter.post(
   "/",
@@ -33,9 +33,8 @@ waterRouter.patch(
 
 waterRouter.delete("/:waterId", isValidId, waterController.deleteById);
 
+waterRouter.get("/today", waterController.getTodayWater);
 
-waterRouter.get(
-  "/today",
-  waterController.getTodayWater);
+waterRouter.get("/month", waterController.getMonthlyWater);
 
 export default waterRouter;
