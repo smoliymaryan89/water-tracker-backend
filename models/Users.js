@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { Schema, model } from "mongoose";
 import { handleSaveError, runValidators } from "./hooks.js";
+import { json } from "express";
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 const genderList = ["male", "female"];
@@ -64,6 +65,12 @@ export const userSignupSchema = Joi.object({
 export const userSigninSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).max(64).required(),
+});
+
+export const updateUserInfo = Joi.object({
+  name: Joi.string(),
+  email: Joi.string().pattern(emailRegexp),
+  gender: Joi.string().valid(...genderList),
 });
 
 export const userRefreshTokenSchema = Joi.object({

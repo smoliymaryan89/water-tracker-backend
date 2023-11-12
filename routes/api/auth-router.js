@@ -16,7 +16,10 @@ const authRouter = express.Router();
 const userSignupValidate = validateBody(userSchemas.userSignupSchema);
 const userSigninValidate = validateBody(userSchemas.userSigninSchema);
 const userRefreshValidate = validateBody(userSchemas.userRefreshTokenSchema);
+
 const userWaterRateValidate = validateBody(userSchemas.userWaterRateSchema);
+
+
 
 authRouter.post(
   "/signup",
@@ -46,11 +49,13 @@ authRouter.patch(
 );
 
 authRouter.patch(
+
   "/waterRate/:userId",
   authenticate,
   isValidId,
   userWaterRateValidate,
-  authController.updateWaterRate
+
+
 );
 
 authRouter.patch(

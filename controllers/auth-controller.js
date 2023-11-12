@@ -129,6 +129,8 @@ const updateUserInfo = async (req, res) => {
   if (email) user.email = email;
   if (gender) user.gender = gender;
 
+  await user.save();
+
   res.json({
     user,
   });
