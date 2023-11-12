@@ -62,4 +62,5 @@ authRouter.patch(
   userInfoValidate,
   authController.updateUserInfo
 );
+
 export default authRouter;
