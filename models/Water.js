@@ -6,12 +6,14 @@ import { handleSaveError, runValidators } from "./hooks.js";
 const waterSchema = new Schema(
   {
     count: {
-      type: String,
+      type: Number,
       required: [true, "Set count"],
+      max: [1500, "Count cannot exceed 1500"],
     },
-    date: {
-      type: Date,
-    },
+    hours: { type: String },
+    minutes: { type: String },
+    day: { type: String },
+    currentMonth: { type: String },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
@@ -19,6 +21,7 @@ const waterSchema = new Schema(
   },
   { versionKey: false, timeseries: true }
 );
+
 
 waterSchema.post("save", handleSaveError);
 
@@ -29,7 +32,10 @@ export const waterAddSchema = Joi.object({
   count: Joi.string().required().messages({
     "any.required": `missing required "count" field`,
   }),
-  date: Joi.string(),
+  hours: Joi.string(),
+  minutes: Joi.string(),
+  day: Joi.string(),
+  month: Joi.string(),
 });
 
 const Water = model("water", waterSchema);

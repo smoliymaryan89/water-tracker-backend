@@ -1,5 +1,9 @@
 import express from "express";
-import { isEmptyBody, isValidId } from "../../middlewares/index.js";
+import {
+  isEmptyBody,
+  isValidId,
+  authenticate,
+} from "../../middlewares/index.js";
 import { validateBody } from "../../decorators/index.js";
 
 import { waterAddSchema } from "../../models/Water.js";
@@ -10,6 +14,8 @@ const waterAddValidate = validateBody(waterAddSchema);
 
 const waterRouter = express.Router();
 
+waterRouter.use(authenticate)
+
 waterRouter.post(
   "/",
   isEmptyBody,
@@ -19,6 +25,7 @@ waterRouter.post(
 
 waterRouter.patch(
   "/:waterId",
+  isValidId,
   isEmptyBody,
   waterAddValidate,
   waterController.updateWater
@@ -26,5 +33,9 @@ waterRouter.patch(
 
 waterRouter.delete("/:waterId", isValidId, waterController.deleteById);
 
+
+waterRouter.get(
+  "/today",
+  waterController.getTodayWater);
 
 export default waterRouter;
