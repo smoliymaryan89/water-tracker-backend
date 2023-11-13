@@ -2,9 +2,19 @@ import nodemailer from "nodemailer";
 
 const { META_UA_PASSWORD, META_UA_EMAIL } = process.env;
 
+// const nodemailerConfig = {
+//   host: "smtp.meta.ua",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: META_UA_EMAIL,
+//     pass: META_UA_PASSWORD,
+//   },
+// };
+
 const nodemailerConfig = {
-  host: "smtp.meta.ua",
-  port: 465,
+  host: "smtp.ukr.net",
+  port: 465, // 25, 465, 2525
   secure: true,
   auth: {
     user: META_UA_EMAIL,

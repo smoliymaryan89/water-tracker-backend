@@ -18,6 +18,9 @@ const userSigninValidate = validateBody(userSchemas.userSigninSchema);
 const userWaterRateValidate = validateBody(userSchemas.userWaterRateSchema);
 const userInfoValidate = validateBody(userSchemas.updateUserInfoSchema);
 const userEmailValidate = validateBody(userSchemas.userEmailSchema);
+const userResetPasswordValidate = validateBody(
+  userSchemas.userResetPasswordSchema
+);
 
 authRouter.post(
   "/signup",
@@ -45,9 +48,15 @@ authRouter.post(
 authRouter.post("/signout", authenticate, authController.signout);
 
 authRouter.post(
-  "/forgot-password",
+  "/forgotPassword",
   userEmailValidate,
   authController.forgotPassword
+);
+
+authRouter.post(
+  "/resetPassword/:resetToken",
+  userResetPasswordValidate,
+  authController.resetPassword
 );
 
 authRouter.get("/current", authenticate, authController.getCurrent);
