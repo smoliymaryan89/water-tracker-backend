@@ -22,11 +22,6 @@ const userSchema = new Schema(
       maxlength: 64,
       required: true,
     },
-    oldPassword: {
-      type: String,
-      minlength: 8,
-      maxlength: 64,
-    },
     gender: {
       type: String,
       enum: genderList,
@@ -45,8 +40,19 @@ const userSchema = new Schema(
     token: {
       type: String,
     },
-    refreshToken: {
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: {
       type: String,
+      required: [true, "Verify token is required"],
+    },
+    resetToken: {
+      type: String,
+    },
+    resetTokenExpiry: {
+      type: Date,
     },
   },
   { versionKey: false, timestamps: true }
@@ -68,14 +74,14 @@ export const userSigninSchema = Joi.object({
   password: Joi.string().min(6).max(64).required(),
 });
 
+export const userEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+});
+
 export const updateUserInfoSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string().pattern(emailRegexp),
   gender: Joi.string().valid(...genderList),
-});
-
-export const userRefreshTokenSchema = Joi.object({
-  refreshToken: Joi.string().required(),
 });
 
 export const userWaterRateSchema = Joi.object({

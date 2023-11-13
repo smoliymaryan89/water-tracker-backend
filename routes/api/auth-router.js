@@ -15,15 +15,24 @@ const authRouter = express.Router();
 
 const userSignupValidate = validateBody(userSchemas.userSignupSchema);
 const userSigninValidate = validateBody(userSchemas.userSigninSchema);
-const userRefreshValidate = validateBody(userSchemas.userRefreshTokenSchema);
 const userWaterRateValidate = validateBody(userSchemas.userWaterRateSchema);
 const userInfoValidate = validateBody(userSchemas.updateUserInfoSchema);
+const userEmailValidate = validateBody(userSchemas.userEmailSchema);
 
 authRouter.post(
   "/signup",
   isEmptyBody,
   userSignupValidate,
   authController.signup
+);
+
+authRouter.get("/verify/:verificationCode", authController.verify);
+
+authRouter.post(
+  "/verify",
+  isEmptyBody,
+  userEmailValidate,
+  authController.resendVerifyEmail
 );
 
 authRouter.post(
@@ -35,7 +44,11 @@ authRouter.post(
 
 authRouter.post("/signout", authenticate, authController.signout);
 
-authRouter.post("/refresh", userRefreshValidate, authController.refresh);
+authRouter.post(
+  "/forgot-password",
+  userEmailValidate,
+  authController.forgotPassword
+);
 
 authRouter.get("/current", authenticate, authController.getCurrent);
 
