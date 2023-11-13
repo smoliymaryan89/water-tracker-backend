@@ -94,7 +94,7 @@ const singin = async (req, res) => {
     throw HttpError(401, "Email not verify");
   }
 
-  const passwordCompare = bcrypt.compare(password, user.password);
+  const passwordCompare = await bcrypt.compare(password, user.password);
 
   if (!passwordCompare) {
     throw HttpError(401, "Email or password is wrong");
@@ -119,7 +119,7 @@ const singin = async (req, res) => {
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
 
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
   if (!user) {
     throw HttpError(404);
   }
@@ -146,7 +146,26 @@ const forgotPassword = async (req, res) => {
 
   await sendEmail(resetPasswordEmail);
 
-  res.json({ message: "Reset password email sent" });
+  res.json({ message: "Reset password email sent", resetToken });
+};
+
+const resetPassword = async (req, res) => {
+  const { resetToken } = req.params;
+
+  const { newPassword } = req.body;
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  const user = await User.findOneAndUpdate(
+    { resetToken },
+    { password: hashedPassword, resetToken: "null" }
+  );
+
+  if (!user) {
+    return res.status(404).json({ message: "Invalid or expired token" });
+  }
+
+  return res.json({ message: "Password updated successfully" });
 };
 
 const signout = async (req, res) => {
@@ -226,6 +245,7 @@ export default {
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   singin: ctrlWrapper(singin),
   forgotPassword: ctrlWrapper(forgotPassword),
+  resetPassword: ctrlWrapper(resetPassword),
   signout: ctrlWrapper(signout),
   getCurrent: ctrlWrapper(getCurrent),
   updateUserAvatar: ctrlWrapper(updateUserAvatar),

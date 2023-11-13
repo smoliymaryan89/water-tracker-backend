@@ -78,6 +78,10 @@ export const userEmailSchema = Joi.object({
   email: Joi.string().pattern(emailRegexp).required(),
 });
 
+export const userResetPasswordSchema = Joi.object({
+  newPassword: Joi.string().min(6).max(64).required(),
+});
+
 export const updateUserInfoSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string().pattern(emailRegexp),
