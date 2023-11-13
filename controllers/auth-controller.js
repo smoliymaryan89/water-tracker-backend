@@ -202,17 +202,28 @@ const updateUserAvatar = async (req, res) => {
 };
 
 const updateUserInfo = async (req, res) => {
-  const { name, email, gender } = req.body;
+  const { name, email, gender, outdatedPassword, newPassword } = req.body;
   const { userId } = req.params;
 
-  const user = await User.findById(userId).select("-password");
+  const user = await User.findById(userId);
 
   if (!user) {
     throw HttpError(404);
   }
+
+  const isPasswordValid = await bcrypt.compare(outdatedPassword, user.password);
+
+  if (!isPasswordValid) {
+    throw HttpError(401, "password is not correct");
+  }
+
   if (name) user.name = name;
   if (email) user.email = email;
   if (gender) user.gender = gender;
+  if (newPassword) {
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+  }
 
   await user.save();
 

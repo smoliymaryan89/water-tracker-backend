@@ -85,6 +85,8 @@ export const userResetPasswordSchema = Joi.object({
 export const updateUserInfoSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string().pattern(emailRegexp),
+  outdatedPassword: Joi.string().min(6).max(64),
+  newPassword: Joi.string().min(6).max(64),
   gender: Joi.string().valid(...genderList),
 });
 
