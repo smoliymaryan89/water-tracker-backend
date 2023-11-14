@@ -1,0 +1,305 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "0.1",
+    "title": "Water tracker",
+    "description": "back-end documentation for water tracker",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "http://localhost:1111" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "Water",
+      "description": "Waters endpoints"
+    }
+  ],
+  "paths": {
+    "/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User Signup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User Signup Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserSignup" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "schema": { "$ref": "#/definitions/SignupResponse" }
+          },
+          "409": {
+            "description": "Email in use",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/verify/{verificationCode}": {
+      "get": {
+        "tags": ["Auth"],
+
+        "summary": "Verify Email",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "verificationCode",
+            "in": "path",
+            "description": "Verification code received via email",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verified successfully",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/verify": {
+      "post": {
+        "tags": ["Auth"],
+
+        "summary": "Resend Verification Email",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Resend Verification Email Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserEmail" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verification email sent",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          },
+          "404": {
+            "description": "Email not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          },
+          "400": {
+            "description": "Verification has already been passed",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/signin": {
+      "post": {
+        "tags": ["Auth"],
+
+        "summary": "User Signin",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User Signin Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserSignin" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User signed in successfully",
+            "schema": { "$ref": "#/definitions/SigninResponse" }
+          },
+          "401": {
+            "description": "Email or password is wrong or Email not verified",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/signout": {
+      "post": {
+        "tags": ["Auth"],
+
+        "summary": "Signout",
+        "produces": ["application/json"],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Signout success",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          }
+        }
+      }
+    },
+    "/forgotPassword": {
+      "post": {
+        "tags": ["Auth"],
+
+        "summary": "Forgot Password",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Forgot Password Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserEmail" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reset password email sent",
+            "schema": { "$ref": "#/definitions/ForgotPasswordResponse" }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/resetPassword/{resetToken}": {
+      "post": {
+        "tags": ["Auth"],
+
+        "summary": "Reset Password",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "resetToken",
+            "in": "path",
+            "description": "Token received via email for password reset",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Reset Password Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserResetPassword" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password updated successfully",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          },
+          "404": {
+            "description": "Invalid or expired token",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/current": {
+      "get": {
+        "tags": ["Auth"],
+
+        "summary": "Get Current User",
+        "produces": ["application/json"],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Current user retrieved successfully",
+            "schema": { "$ref": "#/definitions/CurrentUser" }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserSignup": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "password": { "type": "string" }
+      }
+    },
+    "SignupResponse": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "message": { "type": "string" }
+      }
+    },
+    "SuccessMessage": {
+      "type": "object",
+      "properties": {
+        "message": { "type": "string" }
+      }
+    },
+    "UserEmail": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" }
+      }
+    },
+    "UserSignin": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "password": { "type": "string" }
+      }
+    },
+    "SigninResponse": {
+      "type": "object",
+      "properties": {
+        "token": { "type": "string" },
+        "user": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string" }
+          }
+        }
+      }
+    },
+    "ForgotPasswordResponse": {
+      "type": "object",
+      "properties": {
+        "message": { "type": "string" },
+        "resetToken": { "type": "string" }
+      }
+    },
+    "UserResetPassword": {
+      "type": "object",
+      "properties": {
+        "newPassword": { "type": "string" }
+      }
+    },
+    "CurrentUser": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" }
+      }
+    }
+  }
+}
