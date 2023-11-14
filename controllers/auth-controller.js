@@ -121,7 +121,7 @@ const forgotPassword = async (req, res) => {
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw HttpError(404);
+    throw HttpError(404, "User not found");
   }
 
   const resetToken = crypto.randomBytes(32).toString("hex");
@@ -133,7 +133,7 @@ const forgotPassword = async (req, res) => {
   });
 
   // TODO Замінити link
-  const resetPasswordLink = `${BASE_URL}/api/auth/reset-password/${resetToken}`;
+  const resetPasswordLink = `http://localhost:3000/set-new-password/${resetToken}`;
 
   const resetPasswordEmail = {
     to: email,
