@@ -133,7 +133,7 @@ const forgotPassword = async (req, res) => {
   });
 
   // TODO Замінити link
-  const resetPasswordLink = `http://localhost:3000/set-new-password/${resetToken}`;
+  const resetPasswordLink = `${FRONT_BASE_URL}/set-new-password/${resetToken}`;
 
   const resetPasswordEmail = {
     to: email,
