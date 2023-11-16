@@ -1,31 +1,21 @@
 import nodemailer from "nodemailer";
 
-const { META_UA_PASSWORD, META_UA_EMAIL } = process.env;
-
-// const nodemailerConfig = {
-//   host: "smtp.meta.ua",
-//   port: 465,
-//   secure: true,
-//   auth: {
-//     user: META_UA_EMAIL,
-//     pass: META_UA_PASSWORD,
-//   },
-// };
+const { UKR_NET_PASSWORD, UKR_NET_EMAIL } = process.env;
 
 const nodemailerConfig = {
   host: "smtp.ukr.net",
   port: 465, // 25, 465, 2525
   secure: true,
   auth: {
-    user: META_UA_EMAIL,
-    pass: META_UA_PASSWORD,
+    user: UKR_NET_EMAIL,
+    pass: UKR_NET_PASSWORD,
   },
 };
 
 const transport = nodemailer.createTransport(nodemailerConfig);
 
 const sendEmail = (data) => {
-  const email = { ...data, from: META_UA_EMAIL };
+  const email = { ...data, from: UKR_NET_EMAIL };
   return transport.sendMail(email);
 };
 
