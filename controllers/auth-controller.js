@@ -4,8 +4,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 
-import { nanoid } from "nanoid";
-
 import User from "../models/Users.js";
 import ctrlWrapper from "../decorators/ctrlWrapper.js";
 import { HttpError, cloudinary, sendEmail } from "../helpers/index.js";
@@ -21,7 +19,7 @@ const signup = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const verificationCode = nanoid();
+  const verificationCode = Math.random();
 
   const newUser = await User.create({
     ...req.body,
