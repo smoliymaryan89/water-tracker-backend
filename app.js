@@ -3,13 +3,8 @@ import logger from "morgan";
 import cors from "cors";
 import "dotenv/config";
 import swaggerUi from "swagger-ui-express";
-import { readFileSync } from "node:fs";
+import swaggerDocument from "./swagger.json" assert { type: "json" };
 
-// import swaggerDocument from "./swagger.json" assert { type: "json" };;
-
-const swaggerDocument = JSON.parse(
-  readFileSync("swagger.json").toString("utf-8")
-);
 import authRouter from "./routes/api/auth-router.js";
 import waterRouter from "./routes/api/water-router.js";
 
