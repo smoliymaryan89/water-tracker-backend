@@ -3,7 +3,7 @@
   "info": {
     "version": "0.1",
     "title": "Water tracker",
-    "description": "back-end documentation for water tracker",
+    "description": "Back-end documentation for the water tracker",
     "license": {
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
@@ -53,7 +53,6 @@
     "/verify/{verificationCode}": {
       "get": {
         "tags": ["Auth"],
-
         "summary": "Verify Email",
         "produces": ["application/json"],
         "parameters": [
@@ -80,7 +79,6 @@
     "/verify": {
       "post": {
         "tags": ["Auth"],
-
         "summary": "Resend Verification Email",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -112,7 +110,6 @@
     "/signin": {
       "post": {
         "tags": ["Auth"],
-
         "summary": "User Signin",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -140,7 +137,6 @@
     "/signout": {
       "post": {
         "tags": ["Auth"],
-
         "summary": "Signout",
         "produces": ["application/json"],
         "security": [{ "JWT": [] }],
@@ -155,7 +151,6 @@
     "/forgotPassword": {
       "post": {
         "tags": ["Auth"],
-
         "summary": "Forgot Password",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -183,7 +178,6 @@
     "/resetPassword/{resetToken}": {
       "post": {
         "tags": ["Auth"],
-
         "summary": "Reset Password",
         "consumes": ["application/json"],
         "produces": ["application/json"],
@@ -218,7 +212,6 @@
     "/current": {
       "get": {
         "tags": ["Auth"],
-
         "summary": "Get Current User",
         "produces": ["application/json"],
         "security": [{ "JWT": [] }],
@@ -226,6 +219,121 @@
           "200": {
             "description": "Current user retrieved successfully",
             "schema": { "$ref": "#/definitions/CurrentUser" }
+          }
+        }
+      }
+    },
+    "/water": {
+      "post": {
+        "tags": ["Water"],
+        "security": [{ "JWT": [] }],
+
+        "summary": "Add Consumed Water",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Add Consumed Water Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/WaterAdd" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Water consumption recorded successfully",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          }
+        }
+      }
+    },
+    "/water/{waterId}": {
+      "patch": {
+        "tags": ["Water"],
+        "security": [{ "JWT": [] }],
+
+        "summary": "Update Water Consumption",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "waterId",
+            "in": "path",
+            "description": "ID of the water consumption record",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Update Water Consumption Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/WaterAdd" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Water consumption updated successfully",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          },
+          "404": {
+            "description": "Water consumption record not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Water"],
+        "security": [{ "JWT": [] }],
+
+        "summary": "Delete Water Consumption Record",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "waterId",
+            "in": "path",
+            "description": "ID of the water consumption record",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Water consumption record deleted successfully",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          },
+          "404": {
+            "description": "Water consumption record not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/water/today": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get Today's Water Consumption",
+        "produces": ["application/json"],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Today's water consumption retrieved successfully",
+            "schema": { "$ref": "#/definitions/TodayWaterInfo" }
+          }
+        }
+      }
+    },
+    "/water/month": {
+      "get": {
+        "tags": ["Water"],
+        "summary": "Get Monthly Water Consumption",
+        "produces": ["application/json"],
+        "security": [{ "JWT": [] }],
+        "responses": {
+          "200": {
+            "description": "Monthly water consumption retrieved successfully",
+            "schema": { "$ref": "#/definitions/MonthlyWaterInfo" }
           }
         }
       }
@@ -299,6 +407,36 @@
       "type": "object",
       "properties": {
         "email": { "type": "string" }
+      }
+    },
+    "WaterAdd": {
+      "type": "object",
+      "properties": {}
+    },
+    "TodayWaterInfo": {
+      "type": "object",
+      "properties": {
+        "percentageUsedRounded": { "type": "number" },
+        "waterRecords": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/WaterRecord" }
+        }
+      }
+    },
+    "MonthlyWaterInfo": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/MonthlyWaterRecord" }
+    },
+    "WaterRecord": {
+      "type": "object"
+    },
+    "MonthlyWaterRecord": {
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "dailyWaterRate": { "type": "number" },
+        "percentageUsedRounded": { "type": "number" },
+        "consumptionCount": { "type": "number" }
       }
     }
   }
