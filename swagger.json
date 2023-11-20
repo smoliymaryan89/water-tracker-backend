@@ -209,6 +209,73 @@
         }
       }
     },
+    "/user/{userId}": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Update User Information",
+        "security": [{ "JWT": [] }],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Update User Information Request Body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UserUpdate" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information updated successfully",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": { "$ref": "#/definitions/Error" }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
+    "/user/avatars": {
+      "patch": {
+        "tags": ["Auth"],
+        "summary": "Update User Avatar",
+        "security": [{ "JWT": [] }],
+        "consumes": ["multipart/form-data"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "Image file for the user avatar",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User avatar updated successfully",
+            "schema": { "$ref": "#/definitions/SuccessMessage" }
+          },
+          "401": {
+            "description": "Unauthorized access",
+            "schema": { "$ref": "#/definitions/Error" }
+          }
+        }
+      }
+    },
     "/current": {
       "get": {
         "tags": ["Auth"],
@@ -351,6 +418,16 @@
       "type": "object",
       "properties": {
         "email": { "type": "string" }
+      }
+    },
+    "UserUpdate": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "gender": { "type": "string" },
+        "outdatedPassword": { "type": "string" },
+        "newPassword": { "type": "string" }
       }
     },
     "Error": {
