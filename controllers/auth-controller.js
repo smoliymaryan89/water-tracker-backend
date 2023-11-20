@@ -205,16 +205,23 @@ const updateUserInfo = async (req, res) => {
   const { name, email, gender, outdatedPassword, newPassword } = req.body;
   const { userId } = req.params;
 
+  console.log(outdatedPassword);
+
   const user = await User.findById(userId);
 
   if (!user) {
     throw HttpError(404);
   }
 
-  const isPasswordValid = await bcrypt.compare(outdatedPassword, user.password);
+  if (outdatedPassword) {
+    const isPasswordValid = await bcrypt.compare(
+      outdatedPassword,
+      user.password
+    );
 
-  if (!isPasswordValid) {
-    throw HttpError(401, "password is not correct");
+    if (!isPasswordValid) {
+      throw HttpError(401, "password is not correct");
+    }
   }
 
   if (name) user.name = name;
