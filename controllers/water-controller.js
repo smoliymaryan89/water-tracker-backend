@@ -22,23 +22,22 @@ function getTime() {
     "December",
   ];
   const currentMonth = monthNames[currentDate.getMonth()];
-  const hours = currentDate.getHours();
-  const minutes = currentDate.getMinutes();
 
-  return { day, currentMonth, hours, minutes };
+  return { day, currentMonth };
 }
 
 const addConsumedWater = async (req, res) => {
   const { id: owner } = req.user;
-  const { day, currentMonth, hours, minutes } = getTime();
+  const { time,count } = req.body;
+  const { day, currentMonth } = getTime();
 
   const result = await Water.create({
     ...req.body,
     owner,
     day,
     currentMonth,
-    hours,
-    minutes,
+    time,
+    count,
   });
   res.status(201).json(result);
 };
@@ -46,8 +45,9 @@ const addConsumedWater = async (req, res) => {
 const updateWater = async (req, res) => {
   const { id: owner } = req.user;
   const { waterId } = req.params;
+  const { time } = req.body;
 
-  const { day, currentMonth, hours, minutes } = getTime();
+  const { day, currentMonth } = getTime();
 
   const result = await Water.findOneAndUpdate(
     { _id: waterId, owner },
@@ -55,8 +55,7 @@ const updateWater = async (req, res) => {
       ...req.body,
       day,
       currentMonth,
-      hours,
-      minutes,
+      time
     }
   );
 
@@ -86,7 +85,7 @@ const getTodayWater = async (req, res) => {
   const { id: owner } = req.user;
 
   // Отримати поточну дату та час
-  const { day, currentMonth, hours, minutes } = getTime();
+  const { day, currentMonth } = getTime();
 
   // Отримати всі записи споживання води користувачем за поточний день
   const waterRecords = await Water.find({
@@ -98,7 +97,6 @@ const getTodayWater = async (req, res) => {
   // Розрахунок відсотка використання води від денної норми користувача
   const user = await User.findById(owner);
   const { waterRate } = user;
-  // const waterRate = 5000;
   const totalWaterConsumed = waterRecords.reduce(
     (total, record) => total + record.count,
     0
@@ -121,7 +119,7 @@ const getMonthlyWater = async (req, res) => {
     owner,
     currentMonth: month,
   });
-   const currentMonth = new Date().getMonth();
+  const currentMonth = new Date().getMonth();
 
   // Отримати кількість днів у вибраному місяці
   const daysInMonth = new Date(
@@ -155,12 +153,12 @@ const getMonthlyWater = async (req, res) => {
       100
     );
     const percentageUsedRounded = parseFloat(percentageUsed.toFixed(2));
-
+    const percent = percentageUsedRounded || 0;
     // Додати інформацію за день до масиву
     monthlyInfo.push({
       date: `${day}, ${month}`,
       dailyWaterRate: waterRate,
-      percentageUsedRounded,
+      percent,
       consumptionCount: dailyWaterRecords.length,
     });
   }
