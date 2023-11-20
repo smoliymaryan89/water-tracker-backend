@@ -10,8 +10,7 @@ const waterSchema = new Schema(
       required: [true, "Set count"],
       max: [1500, "Count cannot exceed 1500"],
     },
-    hours: { type: String },
-    minutes: { type: String },
+    time: { type: String },
     day: { type: String },
     currentMonth: { type: String },
     owner: {
@@ -32,8 +31,7 @@ export const waterAddSchema = Joi.object({
   count: Joi.string().required().messages({
     "any.required": `missing required "count" field`,
   }),
-  hours: Joi.string(),
-  minutes: Joi.string(),
+  time: Joi.string(),
   day: Joi.string(),
   month: Joi.string(),
 });
