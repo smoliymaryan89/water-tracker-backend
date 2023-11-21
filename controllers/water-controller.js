@@ -45,7 +45,7 @@ const addConsumedWater = async (req, res) => {
 const updateWater = async (req, res) => {
   const { id: owner } = req.user;
   const { waterId } = req.params;
-  const { time } = req.body;
+  const { time,count } = req.body;
 
   const { day, currentMonth } = getTime();
 
@@ -55,7 +55,8 @@ const updateWater = async (req, res) => {
       ...req.body,
       day,
       currentMonth,
-      time
+      time,
+      count
     }
   );
 
