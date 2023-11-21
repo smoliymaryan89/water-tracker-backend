@@ -488,7 +488,10 @@
     },
     "WaterAdd": {
       "type": "object",
-      "properties": {}
+      "properties": {
+        "time": { "type": "string" },
+        "count": { "type": "string" }
+      }
     },
     "TodayWaterInfo": {
       "type": "object",
