@@ -28,7 +28,7 @@ function getTime() {
 
 const addConsumedWater = async (req, res) => {
   const { id: owner } = req.user;
-  const { time,count } = req.body;
+  const { time, count } = req.body;
   const { day, currentMonth } = getTime();
 
   const result = await Water.create({
@@ -45,7 +45,7 @@ const addConsumedWater = async (req, res) => {
 const updateWater = async (req, res) => {
   const { id: owner } = req.user;
   const { waterId } = req.params;
-  const { time,count } = req.body;
+  const { time, count } = req.body;
 
   const { day, currentMonth } = getTime();
 
@@ -56,7 +56,7 @@ const updateWater = async (req, res) => {
       day,
       currentMonth,
       time,
-      count
+      count,
     }
   );
 
@@ -114,6 +114,63 @@ const getTodayWater = async (req, res) => {
 
 const getMonthlyWater = async (req, res) => {
   const { id: owner } = req.user;
+
+  const currentMonthNow = new Date().getMonth();
+  const { currentMonth } = getTime();
+  // Знайти всі записи споживання води користувачем за обраний місяць
+  const waterRecords = await Water.find({
+    owner,
+    currentMonth,
+  });
+
+  // Отримати кількість днів у вибраному місяці
+  const daysInMonth = new Date(
+    new Date().getFullYear(),
+    currentMonthNow,
+    0
+  ).getDate();
+
+  // Розрахувати денну норму води для користувача
+  const user = await User.findById(owner);
+  const { waterRate } = user;
+  // Об'єкт для зберігання інформації за кожен день місяця
+  const monthlyInfo = [];
+
+  // Пройтися по кожному дню у місяці
+  for (let day = 1; day <= daysInMonth; day++) {
+    // Знайти всі записи споживання води для обраного дня
+    const dailyWaterRecords = waterRecords.filter(
+      (record) => record.day === day.toString()
+    );
+
+    // Розрахувати загальну кількість спожитої води для обраного дня
+    const totalWaterConsumed = dailyWaterRecords.reduce(
+      (total, record) => total + record.count,
+      0
+    );
+
+    // Розрахувати відсоток використання води від денної норми
+    const percentageUsed = Math.min(
+      (totalWaterConsumed / waterRate) * 100,
+      100
+    );
+    const percentageUsedRounded = parseFloat(percentageUsed.toFixed(2));
+    const percent = percentageUsedRounded || 0;
+    // Додати інформацію за день до масиву
+    monthlyInfo.push({
+      day: day,
+      month: currentMonth,
+      dailyWaterRate: waterRate,
+      percent,
+      consumptionCount: dailyWaterRecords.length,
+    });
+  }
+
+  res.json(monthlyInfo);
+};
+
+const paginationGetMonthlyWater = async (req, res) => {
+  const { id: owner } = req.user;
   const { month } = req.body; // Отримати обраний місяць
   // Знайти всі записи споживання води користувачем за обраний місяць
   const waterRecords = await Water.find({
@@ -157,7 +214,8 @@ const getMonthlyWater = async (req, res) => {
     const percent = percentageUsedRounded || 0;
     // Додати інформацію за день до масиву
     monthlyInfo.push({
-      date: `${day}, ${month}`,
+      day: day,
+      month: month,
       dailyWaterRate: waterRate,
       percent,
       consumptionCount: dailyWaterRecords.length,
@@ -173,4 +231,5 @@ export default {
   deleteById: ctrlWrapper(deleteById),
   getTodayWater: ctrlWrapper(getTodayWater),
   getMonthlyWater: ctrlWrapper(getMonthlyWater),
+  paginationGetMonthlyWater: ctrlWrapper(paginationGetMonthlyWater),
 };
