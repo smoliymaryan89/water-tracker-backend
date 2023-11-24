@@ -36,7 +36,7 @@ waterRouter.delete("/:waterId", isValidId, waterController.deleteById);
 waterRouter.get("/today", waterController.getTodayWater);
 
 waterRouter.get("/month", waterController.getMonthlyWater);
-waterRouter.post("/paginationMonth", isEmptyBody, waterController.getMonthlyWater);
+waterRouter.post("/paginationMonth", waterController.paginationGetMonthlyWater);
 
 
 export default waterRouter;
