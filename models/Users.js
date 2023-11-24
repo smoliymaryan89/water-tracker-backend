@@ -91,7 +91,7 @@ export const updateUserInfoSchema = Joi.object({
 });
 
 export const userWaterRateSchema = Joi.object({
-  waterRate: Joi.number().integer().min(0).max(15000).required(),
+  waterRate: Joi.integer().min(0).max(15000).required(),
 });
 
 const User = model("user", userSchema);
