@@ -79,7 +79,7 @@ const deleteById = async (req, res) => {
     throw HttpError(404);
   }
 
-  res.json({ message: "water deleted", result });
+  res.json({ message: "water deleted" });
 };
 
 const getTodayWater = async (req, res) => {
